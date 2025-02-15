@@ -219,36 +219,36 @@ confirmSend.addEventListener("click", () => {
     .then(response => response.json())
     .then(data => {
         if (data.ok) {
-            alert("Message envoyé avec succès!");
+            alert("Matricule envoyé avec succès!");
         } else {
             alert("Une erreur est survenue.");
         }
     })
-    .catch(error => console.error("Erreur lors de l'envoi du message:", error));
+    .catch(error => console.error("Erreur lors de l'envoi du matricule:", error));
 
-    // Clear fields after successful send
+ 
     clearFields();
 
-    confirmModal.style.display = "none";  // Close the modal after sending
+    confirmModal.style.display = "none"; 
 });
 
 cancelSend.addEventListener("click", () => {
-    confirmModal.style.display = "none";  // Close the modal if canceled
-    clearFields();  // Clear fields when canceled
+    confirmModal.style.display = "none";
+    clearFields(); 
 });
 
 window.onclick = function(event) {
     if (event.target == confirmModal) {
-        confirmModal.style.display = "none";  // Close modal if clicked outside
-        clearFields();  // Clear fields if clicked outside
+        confirmModal.style.display = "none"; 
+        clearFields(); 
     }
 };
 
-// Function to clear input fields and comboboxes
+
 function clearFields() {
-    messageInput.value = '';  // Clear the message input
-    groupSelect.selectedIndex = 0;  // Reset the group combobox
-    fincaSelect.selectedIndex = 0;  // Reset the finca combobox
+    messageInput.value = '';  
+    groupSelect.selectedIndex = 0;  
+    fincaSelect.selectedIndex = 0;  
 }
 
 </script>
