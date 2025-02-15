@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Envoyer un message</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            color: #333;
+        }
+
+        h2 {
+            margin-top: 40px;
+            font-size: 24px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .input-container {
+            margin-bottom: 20px;
+        }
+
+        select, input[type="text"], button {
+            font-size: 16px;
+            padding: 12px;
+            margin: 8px 0;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        select:focus, input[type="text"]:focus {
+            border-color: #007BFF;
+            outline: none;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 15px;
+            width: 100%;
+            max-width: 420px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .container {
+            padding: 40px 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 40px auto;
+            max-width: 500px;
+            border-radius: 8px;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            overflow: auto;
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .modal-button {
+            background-color: #007BFF;
+            color: white;
+            padding: 12px 24px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .modal-button:hover {
+            background-color: #0056b3;
+        }
+
+        .modal-close {
+            background-color: #ccc;
+            color: black;
+        }
+
+        .modal-close:hover {
+            background-color: #888;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            button {
+                font-size: 16px;
+            }
+
+            select, input[type="text"] {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>SUIVI LES MATRICULE</h2>
+
+    <div class="input-container">
+        <select id="group">
+            <option value="AGRI STRATEGIE">AGRI STRATEGIE</option>
+            <option value="AGRI SUPPORT">AGRI SUPPORT</option>
+            <option value="BEST PROFIL">BEST PROFIL</option>
+            <option value="AGRICONOMIE">AGRICONOMIE</option>
+            <option value="FARM LABOUR">FARM LABOUR</option>
+        </select>
+    </div>
+
+    <div class="input-container">
+        <select id="finca">
+            <option value="FINCA 1">FINCA 1</option>
+            <option value="FINCA 2">FINCA 2</option>
+            <option value="FINCA 3">FINCA 3</option>
+            <option value="FINCA 4">FINCA 4</option>
+            <option value="FINCA 5">FINCA 5</option>
+            <option value="FINCA 6">FINCA 6</option>
+            <option value="FINCA 8">FINCA 8</option>
+            <option value="FINCA 9">FINCA 9</option>
+            <option value="FINCA 13">FINCA 13</option>
+            <option value="FINCA 19">FINCA 19</option>
+            <option value="2034427318">FINCA 20</option>
+            <option value="5441843944">FINCA 21</option>
+            <option value="FINCA 22">FINCA 22</option>
+        </select>
+    </div>
+
+    <div class="input-container">
+        <input type="text" id="message" placeholder="Entrez votre matricule ici">
+    </div>
+
+    <button id="send">Envoyer</button>
+</div>
+
+<!-- Modal for Confirmation -->
+<div id="confirmModal" class="modal">
+    <div class="modal-content">
+        <h3>Êtes-vous sûr de vouloir envoyer ce matricule ?</h3>
+        <button class="modal-button" id="confirmSend">Oui, envoyer</button>
+        <button class="modal-button modal-close" id="cancelSend">Annuler</button>
+    </div>
+</div>
+
+<script>
+const sendButton = document.getElementById("send");
+const messageInput = document.getElementById("message");
+const groupSelect = document.getElementById("group");
+const fincaSelect = document.getElementById("finca");
+const confirmModal = document.getElementById("confirmModal");
+const confirmSend = document.getElementById("confirmSend");
+const cancelSend = document.getElementById("cancelSend");
+
+sendButton.addEventListener("click", () => {
+    const message = messageInput.value.trim();
+    const group = groupSelect.value;
+    const finca = fincaSelect.value;
+
+    if (!message || !group || !finca) {
+        alert("Veuillez spécifier toutes les valeurs avant d'envoyer.");
+        return;
+    }
+
+    confirmModal.style.display = "block";
+});
+
+confirmSend.addEventListener("click", () => {
+    const message = messageInput.value.trim();
+    const group = groupSelect.value;
+    const finca = fincaSelect.value;
+
+    const chatId = finca;
+    const url = `https://api.telegram.org/bot7561853556:AAElzI6FYzNb6yNUV6EA_Bnzkec2hUrcP70/sendMessage`;
+
+    const formData = new FormData();
+    formData.append("chat_id", chatId);
+    formData.append("text", `${message}  \n\nContrat: ${group}`);
+
+    fetch(url, {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.ok) {
+            alert("Message envoyé avec succès!");
+        } else {
+            alert("Une erreur est survenue.");
+        }
+    })
+    .catch(error => console.error("Erreur lors de l'envoi du message:", error));
+
+    // Clear fields after successful send
+    clearFields();
+
+    confirmModal.style.display = "none";  // Close the modal after sending
+});
+
+cancelSend.addEventListener("click", () => {
+    confirmModal.style.display = "none";  // Close the modal if canceled
+    clearFields();  // Clear fields when canceled
+});
+
+window.onclick = function(event) {
+    if (event.target == confirmModal) {
+        confirmModal.style.display = "none";  // Close modal if clicked outside
+        clearFields();  // Clear fields if clicked outside
+    }
+};
+
+// Function to clear input fields and comboboxes
+function clearFields() {
+    messageInput.value = '';  // Clear the message input
+    groupSelect.selectedIndex = 0;  // Reset the group combobox
+    fincaSelect.selectedIndex = 0;  // Reset the finca combobox
+}
+
+</script>
+
+</body>
+</html>
