@@ -1,2069 +1,257 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <title>AROMA RH</title>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <title>Suivi les Matricule</title>
     <style>
-        
-        * {
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            text-align: center;
+            color: #333;
         }
 
-        body {
-            font-family: 'Roboto', sans-serif;
-            background: linear-gradient(135deg, rgb(59, 130, 246), rgb(30, 58, 138)); 
-            color: #ffffff; 
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        /* Layout */
-        .layout {
-            display: flex;
-            min-height: 100vh;
-            flex-direction: row;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            width: 256px;
-            background-color: rgb(0, 121, 107);
-            padding: 1.5rem;
-            box-shadow: 2px 0 12px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease-in-out;
-            position: fixed;  
-            top: 0;
-            left: 0;
-            height: 100vh;  
-        }
-
-        .sidebar.active {
-            transform: translateX(0);
-        }
-
-        .sidebar-header {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 2rem;
-            padding: 0.5rem;
-        }
-
-        .logo-icon {
-            width: 2.5rem;
-            height: 2.5rem;
-            color: #3498db; 
-            transition: transform 0.3s ease;
-        }
-
-        .logo-text {
-            font-size: 1.5rem;
+        h2 {
+            margin-top: 40px;
+            font-size: 24px;
+            color: #333;
             font-weight: bold;
-            color: #f5f7fa;
-            transition: color 0.3s ease;
         }
 
-        .sidebar-header:hover .logo-icon {
-            transform: rotate(360deg); 
+        .input-container {
+            margin-bottom: 20px;
         }
 
-        .sidebar-nav {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+        select, input[type="text"], button {
+            font-size: 16px;
+            padding: 12px;
+            margin: 8px 0;
             width: 100%;
-            padding: 1rem;
-            border-radius: 1rem;
-            background: none;
-            color: #d1d5db; 
+            max-width: 400px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        select:focus, input[type="text"]:focus {
+            border-color: #007BFF;
+            outline: none;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
             cursor: pointer;
-            font-size: 1rem;
-            text-align: left;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            font-size: 18px;
+            padding: 15px;
+            width: 100%;
+            max-width: 420px;
+            transition: background-color 0.3s;
         }
 
-        .nav-item:hover {
-            background-color: rgb(0, 121, 107); 
-            color: #fff;
-        }
-
-        .nav-item.active {
-            background-color: rgb(3, 212, 188); 
-            color: #fff;
-        }
-
-        .nav-item i {
-            width: 1.5rem;
-            height: 1.5rem;
-        }
-
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            padding: 5px;
-            background-color: #ffffff;
-            box-shadow: inset 0px 0px 12px rgba(0, 0, 0, 0.1);
-            border-radius: 1rem;
-            margin-left: 260px; 
-            transition: margin-left 0.3s ease;
+        button:hover {
+            background-color: #0056b3;
         }
 
         .container {
-            max-width: 90rem;
-            margin: 0 auto;
+            padding: 40px 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 40px auto;
+            max-width: 500px;
+            border-radius: 8px;
         }
 
-        .page-title {
-            font-size: 1rem;
-            font-weight: 700;
-            margin-bottom: 2.5rem;
-            color: #ffffff;
-            text-transform: capitalize;
-        }
-
-        /* Stats Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 0.25rem;
-            margin-bottom: 0.25rem;
-        }
-
-        .stats-card {
-            background-color: rgb(0, 121, 107);
-            border-radius: 1rem;
-            padding: 1rem;
-            box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .stats-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0px 5px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .statsbtn {
-            background-color: rgb(0, 121, 107);
-            border-radius: 1rem;
-            padding: 1rem;
-            font-size: 1rem;
-            color: #ffffff;
-            font-weight: 400;
-            box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .statsbtn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0px 5px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .stats-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-           
-        }
-
-        .stats-title {
-            font-size: 1rem;
-            color: #ffffff;
-            text-align: center;
-            font-weight: 400;
-        }
-
-        .stats-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-top: 0.25rem;
-            color: #ffffff;
-            text-align: right;
-        }
-
-        .stats-percentage {
-            font-size: 1rem;
-            margin-top: 0.25rem;
-            color: #fffb00;
-            font-weight: bold;
-        }
-
-        .stats-icon {
-            padding: 1rem;
-            border-radius: 0.75rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #3b82f6; 
-        }
-
-        .stats-icon i {
-            width: 2rem;
-            height: 2rem;
-            color: #fff;
-        }
-
-        /* Table Section */
-        .tables-section {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-            background-color: #ffffff;
-        }
-
-        .data-table {
-            background-color:rgba(100, 175, 166, 0.747);
-            border-radius: 1rem;
-            box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .table-header {
-            background-color: rgb(2, 51, 46);
-            padding: 1.5rem;
-            border-bottom: 2px solid rgb(1, 70, 62);
-            text-align: center;
-            border-radius: 20px 20px 0px  0px;
-        }
-
-        .table-header h2 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #ffffff;
-            
-        }
-
-        .table-container {
-            max-height: 800px;
-    overflow-y: auto;
-    margin-bottom: 20px;
-    transition: all 0.3s ease;
-    overflow-y: auto; 
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th {
-            padding: 1rem;
-            text-align: left;
-            font-size: 1rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            color: #ffffff;
-            background-color: rgb(3, 90, 80);
-        }
-      
-        td {
-            padding: 1rem;
-            color: #ffffff;
-            border-bottom: 2px solid #f3f4f6;
-            font-size: 1rem;
-        }
-
-        tr:hover td {
-            background-color: rgb(160, 201, 196);
-        }
-        .EFFEC {
-            display: flex;
-            background-color: rgb(0, 121, 107);
-            border-radius: 5px;
-            padding: 8px;
-            margin: 2px;
-            color: #ccc;
-            font-weight: 600;
-
-           
-        }
-        /* Sidebar Toggle for Mobile */
-        .sidebar-toggle {
-            font-size: 2.5rem;
-            background-color: transparent;
-            border: none;
-            color: rgb(0, 121, 107);
-            cursor: pointer;
+        /* Modal styles */
+        .modal {
             display: none;
-            width: 1%;
-            height: 1%;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            overflow: auto;
+            padding-top: 60px;
         }
 
-        
-
-        /* Mobile Styles */
-        @media (max-width: 768px) {
-            .sidebar-toggle {
-                display: block;
-            }
-
-            .layout {
-                flex-direction: column;
-            }
-
-            .main-content {
-                margin-left: 0;
-            }
-
-            .sidebar {
-                transform: translateX(-100%);  
-                position: fixed;
-                z-index: 999;
-                width: 100%;
-            }
-
-            .sidebar.active {
-                transform: translateX(0);  
-            }
-
-            .layout {
-                flex-direction: column;
-            }
-
-            .main-content {
-                margin-left: 0;
-            }
-
-            .sidebar-nav {
-                gap: 1rem;
-            }
-
-            .nav-item {
-                padding: 1rem 1.25rem;
-                font-size: 1.1rem;
-                margin: 5px;
-            }
-
-            .sidebar-header {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            /* Overlay */
-            .overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0, 0, 0, 0.5);
-                z-index: 998;  
-                display: none;  
-            }
-
-            .overlay.active {
-                display: block; 
-            }
-        }
-
-        /* Sidebar Styling */
-.sidebar {
-    width: 256px;
-    background-color: rgb(2, 66, 59);
-    padding: 1.5rem;
-    box-shadow: 2px 0 12px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease-in-out;
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    overflow-y: auto;
-}
-
-/* Sidebar Collapsed */
-.sidebar.collapsed {
-    transform: translateX(-100%);
-}
-
-
-.toggle-btn {
-    position: absolute;
-    top: 1rem;
-    right: -40px;
-    background-color: #1f2937;
-    border: none;
-    color: #fff;
-    cursor: pointer;
-    padding: 0.5rem;
-    border-radius: 50%;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-}
-
-.toggle-btn:hover {
-    background-color: #374151;
-}
-
-
-.sub-nav {
-    
-    display: none;
-    padding-left: 20px;
-}
-
-.sub-nav .nav-item {
-    padding-left: 30px;
-    font-size: 14px;
-    color: #bdc3c7;
-    margin: 5px;
-}
-
-.sub-nav .nav-item:hover {
-    background-color: rgb(8, 167, 148);
-}
-
-
-@media (max-width: 768px) {
-    .sidebar {
-        transform: translateX(-100%);
-    }
-    .sidebar.open {
-        transform: translateX(0);
-    }
-}
-
-.table-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        #download-btn  {
-            padding: 10px 15px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
             border-radius: 8px;
-            cursor: pointer;
-            font-size: 20px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
         }
 
-        #download-btn:hover {
-            transform: scale(1.1);  
-            background-color: #45a049; 
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        #download-btn i {
-            font-size: 24px;
-        }
-
-        #download-btn1  {
-            padding: 10px 15px;
-            background-color: #4CAF50;
+        .modal-button {
+            background-color: #007BFF;
             color: white;
+            padding: 12px 24px;
+            margin: 10px;
             border: none;
-            border-radius: 8px;
+            border-radius: 5px;
             cursor: pointer;
-            font-size: 20px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
         }
 
-        #download-btn1:hover {
-            transform: scale(1.1);  
-            background-color: #45a049; 
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        .modal-button:hover {
+            background-color: #0056b3;
         }
 
-        #download-btn1 i {
-            font-size: 24px;
+        .modal-close {
+            background-color: #ccc;
+            color: black;
         }
 
-        .table-container table th {
-  background-color: #004d40; 
-  color: white;
-}
+        .modal-close:hover {
+            background-color: #888;
+        }
 
-.table-container table td {
-  background-color: #e0f2f1; 
-  color: #000;
-}
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
 
-.table-container table tr:nth-child(even) {
-  background-color: #f5f5f5; 
-}
+            button {
+                font-size: 16px;
+            }
 
-.question-mark {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    border: none;
-    background-color: #FF5733;
-    color: rgb(253, 0, 0);
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    margin-top: 10px;
-}
-
-.question-mark:hover {
-    background-color: #ffa600;
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-}
-
-.question-mark1 {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    border: none;
-    background-color: #FF5733;
-    color: rgb(253, 0, 0);
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    margin-top: 10px;
-}
-
-.question-mark1:hover {
-    background-color: #ffa600;
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-}
-
-.modal {
-    display: none; 
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4); 
-    transition: opacity 0.3s ease;
-}
-
-
-
-
-.modal-content {
-    position: relative;
-    background-color: #fff;
-    margin: 10% auto;
-    padding: 20px;
-    color: #000;
-    border-radius: 10px;
-    width: 80%;
-    max-width: 500px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease-in-out;
-    max-height: 80vh;
-      overflow-y: auto;
-}
-
-
-.close-btn {
-    color: #5f5454;
-    font-size: 28px;
-    font-weight: bold;
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    cursor: pointer;
-}
-
-
-.close-btn:hover,
-.close-btn:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-
-#missing-names-list {
-    max-height: 300px; 
-    overflow-y: auto;
-    padding-right: 10px;
-    list-style: none;
-    margin: 0;
-    padding: 10px 0;
-    border-top: 1px solid #ddd;
-}
-
-
-#missing-names-list li {
-    padding: 8px;
-    background-color: rgb(0, 121, 107);
-    color: #ffffff;
-    margin: 5px 0;
-    border-radius: 5px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease;
-}
-
-#missing-names-list li:hover {
-    background-color: rgb(9, 202, 180);
-}
-
-
-#show-missing-btn {
-    background-color: #ffa600;
-    color: rgb(255, 254, 254);
-    border: none;
-    padding: 0;
-    font-weight: bold;
-    font-size: 25px;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-
-
-#show-missing-btn:hover {
-    background-color: #e7c2a0;
-}
-
-.data-table {
-    max-height: 800px;
-    overflow-y: auto;  
-    margin-bottom: 20px; 
-}
-
-.table-container {
-    
-    overflow-y: auto; 
-}
-
-.data-table table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.data-table th, .data-table td {
-    padding: 10px;
-    text-align: left;
-    border: 1px solid #ddd;
-}
-.data-table1 th, .data-table1 td {
-    padding: 10px;
-    text-align: left;
-    border: 1px solid #ddd;
-}
-.data-table1 table {
-    width: 100%;
-    border-collapse: collapse;
-}
-.data-table1 {
-    display: none;
-    max-height: 800px;
-    overflow-y: auto;
-    margin-bottom: 20px;
-    transition: all 0.3s ease; /* Added smooth transition */
-}
-
-/* Optional: Add a class for when the table is shown */
-.data-table1.show {
-    display: block;
-}
-
-
-
-#searchInput1,#searchInput12,#searchInput,#searchInput2 {
-    padding: 10px 15px;
-    font-size: 16px;
-    border: 2px solid #ccc;
-    border-radius: 5px;
-    width: 100%;
-    max-width: 400px;
-    box-sizing: border-box;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-
-#searchInput1:focus,#searchInput12:focus,#searchInput:focus,#searchInput2:focus {
-    border-color: #3498db;
-    outline: none;
-    box-shadow: 0 0 5px rgba(52, 152, 219, 0.7);
-}
-
-
-#searchInput1::placeholder,#searchInput12::placeholder,#searchInput::placeholder,#searchInput2::placeholder {
-    color: #aaa;
-    font-style: italic;
-}
-
-
-@media (max-width: 768px) {
-    #searchInput1,#searchInput12,#searchInput,#searchInput2 {
-        width: 100%; 
-    }
-}
-.farm-row {
-      padding: 10px;
-      margin: 5px 0;
-      background-color: rgb(0, 121, 107);;
-      border-radius: 8px;
-      
-      justify-content: space-between;
-      font-size: 16px;
-      font-weight: 500;
-      color: #ffffff;
-      transition: background-color 0.3s ease;;
-    }
-    .modal1 {
-      display: none;
-      position: fixed;
-      z-index: 9999;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.6);
-      justify-content: center;
-      align-items: center;
-    }
-
-    .modal-content1 {
-      background: #ffffff;
-      padding: 30px;
-      width: 90%;
-      max-width: 600px;
-      border-radius: 15px;
-      position: relative;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-      max-height: 50vh;
-      overflow-y: auto;
-    }
-
-    .modal-content1 h3 {
-      margin-top: 0;
-      color: #000000;
-      margin-bottom: 20px;
-      font-size: 22px;
-    }
+            select, input[type="text"] {
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="layout">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <i data-lucide="dollar-sign" class="logo-icon"></i>
-                <span class="logo-text">CAMPO</span>
-            </div>
-            <nav class="sidebar-nav">
-                <button class="nav-item active">
-                    <i data-lucide="layout-dashboard"></i>
-                    <span>Dashboard</span>
-                </button>
-                <button class="nav-item" id="customers-toggle">
-                    <i data-lucide="users"></i>
-                    <span>Controle de Présence</span>
-                </button>
-                <div class="sub-nav" id="customers-subnav">
 
-                    <a href="https://aroma-rh.github.io/POINTAGE-F20/">
-                        <button class="nav-item">
-                            <span>EFFECTIF F1</span>
-                        </button>
-                        
-                    </a>
+<div class="container">
+    <h2>SUIVI LES MATRICULE</h2>
 
-                <a href="https://aroma-rh.github.io/POINTAGE-F20/">
-                    <button class="nav-item">
-                        <span>EFFECTIF F2</span>
-                    </button>
-                    
-                </a>
-                <a href="https://aroma-rh.github.io/POINTAGE-F20/">
-                    <button class="nav-item">
-                        <span>EFFECTIF F3</span>
-                    </button>
-                    
-                </a>
-                <a href="https://aroma-rh.github.io/POINTAGE-F20/">
-                    <button class="nav-item">
-                        <span>EFFECTIF F4</span>
-                    </button>
-                    
-                </a>
-                
-                <a href="https://aroma-rh.github.io/POINTAGE-F20/">
-                    <button class="nav-item">
-                        <span>EFFECTIF F5</span>
-                    </button>
-                    
-                </a>
-                <a href="https://aroma-rh.github.io/POINTAGE-F20/">
-                    <button class="nav-item">
-                        <span>EFFECTIF F6</span>
-                    </button>
-                    
-                </a>
-                <a href="https://aroma-rh.github.io/POINTAGE-F20/">
-                    <button class="nav-item">
-                        <span>EFFECTIF F8</span>
-                    </button>
-                    
-                </a>
-                <a href="https://aroma-rh.github.io/POINTAGE-F20/">
-                    <button class="nav-item">
-                        <span>EFFECTIF F9</span>
-                    </button>
-                    
-                </a>
-                <a href="https://aroma-rh.github.io/POINTAGE-F20/">
-                    <button class="nav-item">
-                        <span>EFFECTIF F13</span>
-                    </button>
-                    
-                </a>
-                <a href="https://aroma-rh.github.io/POINTAGE-F20/">
-                    <button class="nav-item">
-                        <span>EFFECTIF F19</span>
-                    </button>
-                    
-                </a>
-                <a href="https://aroma-rh.github.io/POINTAGE-F20/">
-                    <button class="nav-item">
-                        <span>EFFECTIF F20</span>
-                    </button>
-                    
-                </a>
-                <a href="https://aroma-rh.github.io/POINTAGE-F20/">
-                    <button class="nav-item">
-                        <span>EFFECTIF F21</span>
-                    </button>
-                    
-                </a>
-                <a href="https://aroma-rh.github.io/POINTAGE-F20/">
-                    <button class="nav-item">
-                        <span>EFFECTIF F22</span>
-                    </button>
-                    
-                </a>
-                
-               
-                </div>
-                <button class="nav-item" id="deals-toggle">
-                    <i data-lucide="dollar-sign"></i>
-                    <span>Gestion Laboral</span>
-                </button>
-                <div class="sub-nav" id="deals-subnav">
-                    <a href="https://aroma-rh.github.io/carts/">
-                    <button class="nav-item">
-                        <span>NV EMBOUCHE</span>
-                    </button>
-                </a>
-                    <a href="https://aroma-rh.github.io/contra20/">
-                    <button class="nav-item">
-                        <span>CONTRACT</span>
-                    </button>
-                </a>
-                    <a href="https://aroma-rh.github.io/rib/">
-                    <button class="nav-item">
-                        <span>RIB</span>
-                    </button>
-                </a>
-                <a href="https://aroma-rh.github.io/HESPATEC/">
-                    <button class="nav-item">
-                        <span>Hispatec Group</span>
-                    </button>
-                </a>
-                </div>
-                <button class="nav-item" id="customers-toggle1">
-                    <i data-lucide="users"></i>
-                    <span>Gestion de Présence</span>
-                </button>
-                <div class="sub-nav" id="customers-subnav1">
-                <a href="https://aroma-rh.github.io/F20POINTAGE/">
-                    <button class="nav-item">
-                        <span>EFFECTIF F01</span>
-                    </button>
-                </a>
-                <a href="https://aroma-rh.github.io/F20POINTAGE/">
-                    <button class="nav-item">
-                        <span>EFFECTIF F02</span>
-                    </button>
-                </a>
-                <a href="https://aroma-rh.github.io/F20POINTAGE/">
-                    <button class="nav-item">
-                        <span>EFFECTIF F03</span>
-                    </button>
-                </a>
-                <a href="https://aroma-rh.github.io/F20POINTAGE/">
-                    <button class="nav-item">
-                        <span>EFFECTIF F04</span>
-                    </button>
-                </a>
-                <a href="https://aroma-rh.github.io/F20POINTAGE/">
-                    <button class="nav-item">
-                        <span>EFFECTIF F05</span>
-                    </button>
-                </a>
-                <a href="https://aroma-rh.github.io/F20POINTAGE/">
-                    <button class="nav-item">
-                        <span>EFFECTIF F06</span>
-                    </button>
-                </a>
-                <a href="https://aroma-rh.github.io/F20POINTAGE/">
-                    <button class="nav-item">
-                        <span>EFFECTIF F08</span>
-                    </button>
-                </a>
-                <a href="https://aroma-rh.github.io/F20POINTAGE/">
-                    <button class="nav-item">
-                        <span>EFFECTIF F09</span>
-                    </button>
-                </a>
-                <a href="https://aroma-rh.github.io/F20POINTAGE/">
-                    <button class="nav-item">
-                        <span>EFFECTIF F13</span>
-                    </button>
-                </a>
-                <a href="https://aroma-rh.github.io/F20POINTAGE/">
-                    <button class="nav-item">
-                        <span>EFFECTIF F19</span>
-                    </button>
-                </a>
-                <a href="https://aroma-rh.github.io/F20POINTAGE/">
-                    <button class="nav-item">
-                        <span>EFFECTIF F20</span>
-                    </button>
-                </a>
-                <a href="https://aroma-rh.github.io/F20POINTAGE/">
-                    <button class="nav-item">
-                        <span>EFFECTIF F21</span>
-                    </button>
-                </a>
-                <a href="https://aroma-rh.github.io/F20POINTAGE/">
-                    <button class="nav-item">
-                        <span>EFFECTIF F22</span>
-                    </button>
-                </a>
-                </div>
-                <a href="https://aroma-rh.github.io/LA-ABSE/">
-                    <button class="nav-item">
-                        <i data-lucide="calendar"></i>
-                        <span>La Base</span>
-                    </button>
-                </a>
-                <a href="https://aroma-rh.github.io/contact/">
-                <button class="nav-item">
-                    <i data-lucide="calendar"></i>
-                    <span>Contactez-Nous</span>
-                </button>
-            </a>
-            <button class="nav-item" id="customers-toggle2">
-                <i data-lucide="users"></i>
-                <span>Autres options</span>
-            </button>
-            <div class="sub-nav" id="customers-subnav2">
-            
-            <a href="https://aroma-rh.github.io/tache-equipe/">
-                <button class="nav-item">
-                    <span>Ajouter Equipe/Tache</span>
-                </button>
-            </a>
-            <a href="https://aroma-rh.github.io/MINI-BUS/">
-                <button class="nav-item">
-                    <span>Effectif mini bus</span>
-                </button>
-            </a>
-                <a href="https://aroma-rh.github.io/CALCULATOR/">
-                <button class="nav-item">
-                    <span>Calculatrice</span>
-                </button>
-            </a>
-            </div>
-            </nav>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
-            
-            <div class="container">
-                
-                
-                <div class="stats-grid">
-                    <div class="stats-card">
-                        <div class="stats-header">
-                            <span class="stats-title">Total des travailleurs</span>
-                        </div>
-                        <div class="stats-value" id="totalEmployees">0</div>
-                        <button onclick="showFarmCounts()" class="question-mark1">?</button>
-                    </div>
-                    
-                    <div class="stats-card" style="display: none;">
-                        <div class="stats-header">
-                            <span class="stats-title">Total Heures</span>
-                        </div>
-                        <div class="stats-value" id="totalHours">0</div>
-                    </div>
-                    
-                    <div class="stats-card" style="display: none;">
-                        <div class="stats-header">
-                            <span class="stats-title">Marquer la présence</span>
-                            <div class="stats-percentage" id="missingContractPercentage">0%</div>
-                        </div>
-                        <div class="stats-value" id="missingContract">0</div>
-                        
-                    </div>
-                    
-                    <div class="stats-card">
-                        <div class="stats-header">
-                            <span class="stats-title">Manque de Contrat</span>
-                            <div class="stats-percentage" id="nonContractPercentage">0%</div>
-                        </div>
-                        <div class="stats-value" id="nonEmptyColumn7">0</div>
-                        <button id="show-missing-btn" class="question-mark">?</button>
-                    </div>
-                    <div id="missing-names-modal" class="modal">
-                        <div class="modal-content" >
-                            <span class="close-btn">&times;</span>
-                            <h3>Liste non pointes</h3>
-                            <ul id="missing-names-list"></ul>
-                        </div>
-                    </div>
-                    
-
-                    
-                
-                    <div class="stats-card">
-                        <div class="stats-header">
-                            <span class="stats-title">Total Equipes</span>
-                        </div>
-                        <div class="stats-value" id="totalEquipe">0</div>
-                    </div>
-                    <div class="stats-card">
-                        <div class="stats-header">
-                            <span class="stats-title">Total taches</span>
-                        </div>
-                        <div class="stats-value" id="totaltache">0</div>
-                    </div>
-                    <button class="statsbtn" onclick="showStatistics()">Statistique des contrats </button>
-                    <button class="statsbtn" onclick="showStatisticsjJ()">Statistique des transport </button>
-                    
-                </div>
-
-                <!-- Tables Section -->
-                <div class="tables-section">
-                    <div class="data-table">
-                        <div class="table-header" >
-                            <h2>SUIVI DE EFFECTIF </h2>
-                            
-                            <input 
-                       type="text" 
-                       id="searchInput" 
-                       class="search-input" 
-                       value="FINCA "
-                       placeholder="Rechercher des fermes (e.g., FINCA 1)"
-                       oninput="searchTableeffectif()"
-                             >
-                        <input 
-                        type="text" 
-                        id="searchInput2" 
-                        class="search-input" 
-                        placeholder="Rechercher ICI"
-                        oninput="searchTableeffectif1()"
-                        >
-                            <button id="download-btn">
-                                <i class="fas fa-download"></i>
-                            </button><button class="EFFEC" onclick="toggleGood()">POINTAGE</button>
-                        </div>
-                        
-                        
-
-                        <div class="table-container" >
-                            <table border="1">
-                                <thead>
-                                    <tr>
-                                        <th>EQUIPE</th>
-                                        <th>FINCA</th>
-                                        <th>DATE</th>
-                                        <th>TAREA</th>
-                                        <th>EFFECTIF</th>
-                                        
-                                    </tr>
-                                </thead>
-                                <tbody id="table-body2">
-                                    <!-- table effectif-->
-                                </tbody>
-                            </table>
-                            
-                        </div>
-                    </div>
-          
-          
-                    <div class="data-table1">
-                        <div class="table-header" >
-                            <h2 >SUIVI DE PONTAGE</h2>
-                            <input 
-                       type="text" 
-                       id="searchInput1" 
-                       class="search-input" 
-                       value="FINCA "
-                       placeholder="Rechercher des fermes (e.g., FINCA 1)"
-                       oninput="searchTablepointage()"
-                             >
-                        <input 
-                        type="text" 
-                        id="searchInput12" 
-                        class="search-input" 
-                        placeholder="Rechercher ICI"
-                        oninput="searchTablepointage1()"
-                        >
-                            <button id="download-btn1">
-                                <i class="fas fa-download"></i>
-                            </button>
-                        </div>
-                        <div class="table-container">
-                            <table border="1">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>NOME</th>
-                                        <th>EQUIPE</th>
-                                        <th>RHH</th>
-                                        <th>DATE</th>
-                                        <th>FINCA</th>
-                                        <th>SITUATION</th>
-                                        <th>S CONTRAT</th>
-                                        <th>CONTRAT</th>
-                                        
-                                    </tr>
-                                </thead>
-                                <tbody id="table-body">
-                                    <!-- pointage -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    
-
-                    
-                </div>
-            </div>
-        </main>
+    <div class="input-container">
+        <select id="group">
+            <option value="AGRI STRATEGIE">AGRI STRATEGIE</option>
+            <option value="AGRI SUPPORT">AGRI SUPPORT</option>
+            <option value="BEST PROFIL">BEST PROFIL</option>
+            <option value="AGRICONOMIE">AGRICONOMIE</option>
+            <option value="FARM LABOUR">FARM LABOUR</option>
+        </select>
     </div>
-    <div id="resultModal" class="modal1">
-        <div class="modal-content1">
-          <span class="close-btn" onclick="closeModal()">&times;</span>
-          <h3>Nombre de travailleurs dans chaque ferme :</h3>
-          <div id="modalResult"></div>
-        </div>
-      </div>
-    <!-- Overlay for mobile sidebar -->
-    <div class="overlay" onclick="toggleSidebar()"></div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
 
-    <script>
-function toggleGood() {
-    const elements = document.getElementsByClassName("data-table1");
-    for (let i = 0; i < elements.length; i++) {
-        const el = elements[i];
+    <div class="input-container">
+        <select id="finca">
+            <option value="-4772601946">FINCA 1</option>
+            <option value="-4741071638">FINCA 2</option>
+            <option value="-4762800907">FINCA 3</option>
+            <option value="-4742545791">FINCA 4</option>
+            <option value="-4742545791">FINCA 5</option>
+            <option value="-4686579199">FINCA 6</option>
+            <option value="-4789819208">FINCA 8</option>
+            <option value="-4696600735">FINCA 9</option>
+            <option value="-4735933696">FINCA 13</option>
+            <option value="-4754061005">FINCA 19</option>
+            <option value="-4651464309">FINCA 20</option>
+            <option value="-4742867146">FINCA 21</option>
+            <option value="-4706800234">FINCA 22</option>
+        </select>
+    </div>
 
-       
-        if (el.style.display === "none" || el.style.display === "") {
-            el.style.display = "block";  
-        } else {
-            el.style.display = "none";   
-        }
-    }
-}
+    <div class="input-container">
+        <input type="text" id="message" placeholder="Entrez votre matricule ici">
+    </div>
 
+    <button id="send">Envoyer</button>
+</div>
 
+<!-- Modal for Confirmation -->
+<div id="confirmModal" class="modal">
+    <div class="modal-content">
+        <h3>Êtes-vous sûr de vouloir envoyer ce matricule ?</h3>
+        <button class="modal-button" id="confirmSend">Oui, envoyer</button>
+        <button class="modal-button modal-close" id="cancelSend">Annuler</button>
+    </div>
+</div>
 
+<script>
+const sendButton = document.getElementById("send");
+const messageInput = document.getElementById("message");
+const groupSelect = document.getElementById("group");
+const fincaSelect = document.getElementById("finca");
+const confirmModal = document.getElementById("confirmModal");
+const confirmSend = document.getElementById("confirmSend");
+const cancelSend = document.getElementById("cancelSend");
 
+sendButton.addEventListener("click", () => {
+    const message = messageInput.value.trim();
+    const group = groupSelect.value;
+    const finca = fincaSelect.value;
 
-   function showFarmCounts() {
-      const table = document.getElementById("table-body");
-      const rows = table.querySelectorAll("tbody tr");
-      const farmCount = {};
-
-      rows.forEach(row => {
-        const farm = row.cells[5].textContent.trim();
-        farmCount[farm] = (farmCount[farm] || 0) + 1;
-      });
-
-      const resultDiv = document.getElementById("modalResult");
-      resultDiv.innerHTML = "";
-
-      // Sort farm names A-Z
-      const sortedFarms = Object.keys(farmCount).sort();
-
-      sortedFarms.forEach(farm => {
-        const div = document.createElement("div");
-        div.className = "farm-row";
-        div.innerHTML = `<span>${farm}</span> >>>>       <span style="text-align: right;">${farmCount[farm]} travailleurs</span>`;
-        resultDiv.appendChild(div);
-      });
-
-      document.getElementById("resultModal").style.display = "flex";
+    if (!message || !group || !finca) {
+        alert("Veuillez spécifier toutes les valeurs avant d'envoyer.");
+        return;
     }
 
-    function closeModal() {
-      document.getElementById("resultModal").style.display = "none";
-    }
-
-    window.onclick = function(event) {
-      const modal = document.getElementById("resultModal");
-      if (event.target === modal) {
-        modal.style.display = "none";
-      }
-    }
-document.getElementById('customers-toggle').addEventListener('click', function() {
-            const subNav = document.getElementById('customers-subnav');
-            subNav.style.display = subNav.style.display === 'block' ? 'none' : 'block';
-        });
-
-        document.getElementById('deals-toggle').addEventListener('click', function() {
-            const subNav = document.getElementById('deals-subnav');
-            subNav.style.display = subNav.style.display === 'block' ? 'none' : 'block';
-        });
-
-        document.getElementById('customers-toggle1').addEventListener('click', function() {
-            const subNav = document.getElementById('customers-subnav1');
-            subNav.style.display = subNav.style.display === 'block' ? 'none' : 'block';
-        });
-        document.getElementById('customers-toggle2').addEventListener('click', function() {
-            const subNav = document.getElementById('customers-subnav2');
-            subNav.style.display = subNav.style.display === 'block' ? 'none' : 'block';
-        });
-
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', function() {
-                if (this !== document.getElementById('customers-toggle') && document.getElementById('customers-subnav').style.display === 'block') {
-                    document.getElementById('customers-subnav').style.display = 'none';
-                }
-                if (this !== document.getElementById('deals-toggle') && document.getElementById('deals-subnav').style.display === 'block') {
-                    document.getElementById('deals-subnav').style.display = 'none';
-                }
-                if (this !== document.getElementById('customers-toggle1') && document.getElementById('customers-subnav').style.display === 'block') {
-                    document.getElementById('customers-subnav1').style.display = 'none';
-                }
-                if (this !== document.getElementById('customers-toggle2') && document.getElementById('customers-subnav').style.display === 'block') {
-                    document.getElementById('customers-subnav2').style.display = 'none';
-                }
-            });
-        });
-        function searchTablepointage1() {
-let input = document.getElementById("searchInput12");
-let filter = input.value.toLowerCase();
-let table = document.getElementById("table-body");
-let tr = table.getElementsByTagName("tr");
-
-let visibleRows = 0;
-let totalHours = 0;
-let missingContractCount = 0;
-let nonEmptyColumn7Count = 0;
-let uniqueGroups = new Set();
-
-for (let i = 0; i < tr.length; i++) {
-    let td = tr[i].getElementsByTagName("td");
-    let rowContainsFilter = false;
-
-    for (let j = 0; j < td.length; j++) {
-        if (td[j].textContent.toLowerCase().includes(filter)) {
-            rowContainsFilter = true;
-            break;
-        }
-    }
-
-    if (rowContainsFilter) {
-        tr[i].style.display = "";
-        visibleRows++;
-
-        const value = parseFloat(td[3].textContent); 
-        if (!isNaN(value)) {
-            totalHours += value;
-        }
-
-        if (td[6] && td[6].textContent.trim() !== '') {
-            missingContractCount++;
-        }
-
-        if (td[7] && td[7].textContent.trim() !== '') {
-            nonEmptyColumn7Count++;
-        }
-
-       
-        if (td[2] && td[2].textContent.trim() !== "") {
-            uniqueGroups.add(td[2].textContent.trim());
-        }
-    } else {
-        tr[i].style.display = "none";
-    }
-}
-
-// Update statistics
-document.getElementById("totalEmployees").textContent = visibleRows;
-document.getElementById("totalHours").textContent = totalHours.toFixed(2);
-
-let missingContractPercentage = (missingContractCount / visibleRows) * 100;
-if (isNaN(missingContractPercentage)) missingContractPercentage = 0;
-document.getElementById("missingContract").textContent = missingContractCount;
-document.getElementById("missingContractPercentage").textContent = missingContractPercentage.toFixed(2) + '%';
-
-let nonEmptyColumn7Percentage = (nonEmptyColumn7Count / visibleRows) * 100;
-if (isNaN(nonEmptyColumn7Percentage)) nonEmptyColumn7Percentage = 0;
-document.getElementById("nonEmptyColumn7").textContent = nonEmptyColumn7Count;
-document.getElementById("nonContractPercentage").textContent = nonEmptyColumn7Percentage.toFixed(2) + '%';
-
-document.getElementById("totalEquipe").textContent = uniqueGroups.size;
-}
-        function searchTablepointage() {
-            let input = document.getElementById("searchInput1");
-            let filter = input.value.toLowerCase();
-            let table = document.getElementById("table-body");
-            let tr = table.getElementsByTagName("tr");
-
-            let visibleRows = 0;
-            let totalHours = 0;
-            let missingContractCount = 0;
-            let nonEmptyColumn7Count = 0;
-            let uniqueGroups = new Set();
-
-            for (let i = 0; i < tr.length; i++) {
-                let td = tr[i].getElementsByTagName("td");
-                let rowContainsFilter = false;
-
-                for (let j = 0; j < td.length; j++) {
-                    let cellText = td[j].textContent || "";
-                    
-                    // Special handling for farm names
-                    if (cellText.toLowerCase().includes("finca")) {
-                        // Exact match for farm names
-                        if (cellText.toLowerCase() === filter) {
-                            rowContainsFilter = true;
-                            break;
-                        }
-                    } else {
-                        // Normal partial match for other columns
-                        if (cellText.toLowerCase().includes(filter)) {
-                            rowContainsFilter = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (rowContainsFilter || filter === '') {
-                    tr[i].style.display = "";
-                    visibleRows++;
-
-                    const value = parseFloat(td[3].textContent || "0"); 
-                    if (!isNaN(value)) {
-                        totalHours += value;
-                    }
-
-                    if (td[6] && td[6].textContent.trim() !== '') {
-                        missingContractCount++;
-                    }
-
-                    if (td[7] && td[7].textContent.trim() !== '') {
-                        nonEmptyColumn7Count++;
-                    }
-                   
-                    if (td[2] && td[2].textContent.trim() !== "") {
-                        uniqueGroups.add(td[2].textContent.trim());
-                    }
-                } else {
-                    tr[i].style.display = "none";
-                }
-            }
-
-            // Update statistics
-            document.getElementById("totalEmployees").textContent = visibleRows;
-            document.getElementById("totalHours").textContent = totalHours.toFixed(2);
-
-            let missingContractPercentage = (missingContractCount / visibleRows) * 100;
-            if (isNaN(missingContractPercentage)) missingContractPercentage = 0;
-            document.getElementById("missingContract").textContent = missingContractCount;
-            document.getElementById("missingContractPercentage").textContent = missingContractPercentage.toFixed(2) + '%';
-
-            let nonEmptyColumn7Percentage = (nonEmptyColumn7Count / visibleRows) * 100;
-            if (isNaN(nonEmptyColumn7Percentage)) nonEmptyColumn7Percentage = 0;
-            document.getElementById("nonEmptyColumn7").textContent = nonEmptyColumn7Count;
-            document.getElementById("nonContractPercentage").textContent = nonEmptyColumn7Percentage.toFixed(2) + '%';
-
-            document.getElementById("totalEquipe").textContent = uniqueGroups.size;
-        }
-
-
-function searchTableeffectif() {
-    let input = document.getElementById("searchInput");
-    let filter = input.value.toLowerCase();
-    let table = document.getElementById("table-body2");
-    let tr = table.getElementsByTagName("tr");
-
-    for (let i = 0; i < tr.length; i++) { 
-        let td = tr[i].getElementsByTagName("td");
-        let rowContainsFilter = false;
-
-        for (let j = 0; j < td.length; j++) {
-            if (td[j].textContent.toLowerCase().includes(filter)) {
-                rowContainsFilter = true;
-                break;
-            }
-        }
-
-        tr[i].style.display = rowContainsFilter ? "" : "none";
-    }
-}
-function searchTableeffectif1() {
-    const input = document.getElementById("searchInput2");
-    const filter = input.value.toLowerCase().trim();
-    const table = document.getElementById("table-body2");
-    const tr = table.getElementsByTagName("tr");
-
-    for (let i = 0; i < tr.length; i++) {
-        const td = tr[i].getElementsByTagName("td");
-        let rowContainsFilter = false;
-
-        for (let j = 0; j < td.length; j++) {
-            const cellText = td[j].textContent.toLowerCase().trim();
-
-            // إذا كانت الكلمة تحتوي على "finca" نستخدم مطابقة تامة
-            if (cellText.includes("finca")) {
-                if (cellText === filter) {
-                    rowContainsFilter = true;
-                    break;
-                }
-            } else {
-                // غير ذلك نستخدم المطابقة الجزئية العادية
-                if (cellText.includes(filter)) {
-                    rowContainsFilter = true;
-                    break;
-                }
-            }
-        }
-
-        tr[i].style.display = rowContainsFilter ? "" : "none";
-    }
-}
-
-
-        function toggleSidebar() {
-            const sidebar = document.querySelector('.sidebar');
-            const overlay = document.querySelector('.overlay');
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
-        }
-
-        document.addEventListener('DOMContentLoaded', function () {
-    function displayData(data) {
-        const tableBody = document.getElementById('table-body');
-        const totalEmployeesElement = document.getElementById('totalEmployees');
-        const totalHoursElement = document.getElementById('totalHours');
-        const missingContractElement = document.getElementById('missingContract');
-        const nonEmptyColumn7Element = document.getElementById('nonEmptyColumn7');
-        const totalEquipeElement = document.getElementById('totalEquipe');
-        const missingContractPercentageElement = document.getElementById('missingContractPercentage');
-        const nonContractPercentageElement = document.getElementById('nonContractPercentage');
-        const missingNamesButton = document.getElementById('show-missing-btn');
-        
-        tableBody.innerHTML = '';
-        let employeeCount = 0;
-        let totalHours = 0;
-        let missingContractCount = 0;
-        let nonEmptyColumn7Count = 0;
-        let uniqueGroups = new Set();
-        let missingNames = [];
-
-        const filteredData = data
-
-  filteredData.slice(1).forEach((row, index) => {
-    if (row.some(cell => cell && typeof cell === 'string' && cell.trim() !== "")) {
-        let tr = document.createElement('tr');
-
-        if (index === 0) {
-            tr.style.display = 'none'; 
-        }
-
-        row.forEach((cell, index) => {
-            let td = document.createElement('td');
-
-            if (index === 4 && cell) {
-                td.textContent = formatDate(cell); 
-            } else {
-                td.textContent = cell || ''; 
-            }
-
-            if (index === 7 && cell && cell.trim() === 'NON') {
-                let button = document.createElement('button');
-                button.textContent = '?';
-                button.style.marginLeft = '10px';
-                button.style.cursor = 'pointer';
-                button.style.width = '30px';
-                button.style.height = '30px';
-                button.style.borderRadius = '50%';
-                button.style.border = 'none';
-                button.style.backgroundColor = '#FF5733'; 
-                button.style.color = 'white';
-                button.style.fontSize = '16px';
-                button.style.fontWeight = 'bold';
-                button.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
-                button.style.transition = 'all 0.3s ease';
-
-                button.addEventListener('mouseenter', () => {
-                    button.style.backgroundColor = '#C70039'; 
-                    button.style.boxShadow = '0 6px 8px rgba(0, 0, 0, 0.15)';
-                });
-
-                button.addEventListener('mouseleave', () => {
-                    button.style.backgroundColor = '#FF5733';
-                    button.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
-                });
-
-                button.addEventListener('click', function() {
-                    fetchCommentFromGoogleSheets(row[0], td);
-                });
-
-                td.appendChild(button);
-            }
-
-            tr.appendChild(td);
-        });
-
-        tableBody.appendChild(tr);
-        employeeCount++;
-
-        const value = parseFloat(row[3]);
-        if (!isNaN(value)) {
-            totalHours += value;
-        }
-
-        if (row[6] && row[6].trim() !== '') {
-            missingContractCount++;
-        }
-
-        if (row[7] && row[7].trim() !== '') {
-            nonEmptyColumn7Count++;
-        }
-
-        if (row[2] && row[2].trim() !== "") {
-            uniqueGroups.add(row[2]);
-        }
-
-        if (row[7].trim() === 'NON') {
-            missingNames.push({ name: row[1], finca: row[5], equipe: row[2], code: row[0],CONTRAT: row[8] });
-        }
-    }
+    confirmModal.style.display = "block";
 });
 
+confirmSend.addEventListener("click", () => {
+    const message = messageInput.value.trim();
+    const group = groupSelect.value;
+    const finca = fincaSelect.value;
 
+    const chatId = finca;
+    const url = `https://api.telegram.org/bot7705838883:AAGuC6SB6IF5b08WsewMWnwZ99UoNAC58ZI/sendMessage`;
 
-        if (totalEmployeesElement) totalEmployeesElement.textContent = employeeCount;
-        if (totalHoursElement) totalHoursElement.textContent = totalHours;
-        if (missingContractElement) missingContractElement.textContent = missingContractCount;
-        if (nonEmptyColumn7Element) nonEmptyColumn7Element.textContent = nonEmptyColumn7Count;
-        if (totalEquipeElement) totalEquipeElement.textContent = uniqueGroups.size;
+    const formData = new FormData();
+    formData.append("chat_id", chatId);
+    formData.append("text", `${message}  \n\nContrat: ${group}`);
 
-        let missingContractPercentage = employeeCount > 0 ? ((missingContractCount / employeeCount) * 100).toFixed(2) + "%" : "0%";
-        let nonContractPercentage = employeeCount > 0 ? ((nonEmptyColumn7Count / employeeCount) * 100).toFixed(2) + "%" : "0%";
-
-        if (missingContractPercentageElement) missingContractPercentageElement.textContent = missingContractPercentage;
-        if (nonContractPercentageElement) nonContractPercentageElement.textContent = nonContractPercentage;
-
-        if (missingNamesButton) {
-            missingNamesButton.addEventListener('click', function () {
-                updateModal(missingNames);
-            });
-        }
-        
-        document.getElementById('download-btn1').addEventListener('click', function() {
-            downloadTableAsXLSX1(filteredData);
-        });
-    }
-    function updateModal(names) {
-    let namesList = document.getElementById('missing-names-list');
-    namesList.innerHTML = '';
-
-    if (names.length > 0) {
-        names.forEach(nameObj => {
-            let li = document.createElement('li');
-            li.textContent = `${nameObj.code} ${nameObj.name} >> ${nameObj.finca}`;
-            namesList.appendChild(li);
-        });
-    } else {
-        let li = document.createElement('li');
-        li.textContent = 'Rien';
-        namesList.appendChild(li);
-    }
-
-  
-    let modal = document.getElementById('missing-names-modal');
-    let modalContent = modal.querySelector('.modal-content');
-
-    
-    let oldButtons = modalContent.querySelectorAll('button');
-    oldButtons.forEach(button => button.remove());
-
-   
-    let sendButton = document.createElement('button');
-    sendButton.textContent = 'Envoyer';
-    sendButton.style.padding = '10px 15px';
-    sendButton.style.backgroundColor = 'rgb(14 69 62)';
-    sendButton.style.color = 'white';
-    sendButton.style.border = 'none';
-    sendButton.style.borderRadius = '5px';
-    sendButton.style.cursor = 'pointer';
-    sendButton.style.marginTop = '15px';
-    sendButton.style.width = '45%';
-
-    sendButton.addEventListener('click', function () {
-        sendGroupedImages(names);
-    });
-
-
-    let closeButton = document.createElement('button');
-    closeButton.textContent = 'Annuler';
-    closeButton.style.padding = '10px 15px';
-    closeButton.style.backgroundColor = '#ff4d4d';
-    closeButton.style.color = 'white';
-    closeButton.style.border = 'none';
-    closeButton.style.borderRadius = '5px';
-    closeButton.style.cursor = 'pointer';
-    closeButton.style.marginTop = '15px';
-    closeButton.style.marginLeft = '15px';
-    closeButton.style.marginRight = '15px';
-    closeButton.style.width = '45%';
-
-    closeButton.addEventListener('click', function () {
-        modal.style.display = 'none';
-    });
-
-
-    modalContent.appendChild(sendButton);
-    modalContent.appendChild(closeButton);
-
-    modal.style.display = 'block';
-}
-
-
-function sendGroupedImages(names) {
-    const fincaGroups = {
-        'FINCA 1': '-4772601946',
-        'FINCA 2': '-4741071638',
-        'FINCA 3': '-4762800907',
-        'FINCA 4': '-4742545791',
-        'FINCA 5': '-4742867146',
-        'FINCA 6': '-4686579199',
-        'FINCA 8': '-4789819208',
-        'FINCA 9': '-4696600735',
-        'FINCA 13': '-4735933696',
-        'FINCA 19': '-4754061005',
-        'FINCA 20': '-4651464309',
-        'FINCA 21': '-4742867146',
-        'FINCA 22': '-4706800234',
-    };
-
-    
-    let fincaEquipes = {};
-
-  
-    names.forEach(({ finca, equipe, code, name, CONTRAT }) => {
-        if (!fincaEquipes[finca]) fincaEquipes[finca] = {};
-        if (!fincaEquipes[finca][equipe]) fincaEquipes[finca][equipe] = [];
-        fincaEquipes[finca][equipe].push(`${code} - ${name}>>>> ${CONTRAT}`);
-    });
-
-    let allPromises = [];
-    
-    Object.keys(fincaEquipes).forEach(finca => {
-        let chatId = fincaGroups[finca];
-        if (chatId) {
-            Object.keys(fincaEquipes[finca]).forEach(equipe => {
-                let members = fincaEquipes[finca][equipe];
-                allPromises.push(() =>
-                    createImage(finca, equipe, members)
-                        .then(imageBlob => sendImageToTelegram(chatId, imageBlob, `${finca}_${equipe}.png`))
-                        .catch(error => console.error('❌ Erreur lors de la création de image :', error))
-                );
-            });
-        }
-    });
-
-
-    sendBatches(allPromises, 10, 3000);
-}
-
-
-function createImage(finca, equipe, members) {
-    return new Promise((resolve, reject) => {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-
-        const width = 500;
-        const height = 100 + members.length * 30;
-        canvas.width = width;
-        canvas.height = height;
-
-        ctx.fillStyle = 'white';
-        ctx.fillRect(0, 0, width, height);
-
-        ctx.fillStyle = 'black';
-        ctx.font = 'bold 20px Arial';
-        ctx.fillText(`${finca} - ${equipe}`, 20, 30);
-
-        ctx.font = '16px Arial';
-        members.forEach((member, index) => {
-            ctx.fillText(member, 20, 60 + index * 30);
-        });
-
-        canvas.toBlob(blob => {
-            if (blob) {
-                resolve(blob);
-            } else {
-                reject('Erreur lors de la conversion de l image en Blob');
-            }
-        });
-    });
-}
-
-
-function sendImageToTelegram(chatId, imageBlob, filename, attempt = 1) {
-    const token = '7705838883:AAGuC6SB6IF5b08WsewMWnwZ99UoNAC58ZI';
-    const MAX_ATTEMPTS = 5;
-
-    let formData = new FormData();
-    formData.append('chat_id', chatId);
-    formData.append('photo', imageBlob, filename);
-
-    return fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
-        method: 'POST',
-        body: formData,
+    fetch(url, {
+        method: "POST",
+        body: formData
     })
     .then(response => response.json())
     .then(data => {
         if (data.ok) {
-            console.log(`✅ Image envoyée : ${filename}`);
-        } else if (data.error_code === 429 && attempt <= MAX_ATTEMPTS) {
-            const retryAfter = data.parameters.retry_after || 40;
-            console.warn(`⏳ Trop de requêtes. Reessayer dans ${retryAfter} secondes (tentative ${attempt}/${MAX_ATTEMPTS})`);
-            return new Promise(resolve => setTimeout(resolve, retryAfter * 1000))
-                .then(() => sendImageToTelegram(chatId, imageBlob, filename, attempt + 1));
+            alert("Matricule envoyé avec succès!");
         } else {
-            console.error(`❌ Erreur lors de l'envoi de l'image : ${filename}`, data);
+            alert("Une erreur est survenue.");
         }
     })
-    .catch(error => {
-        console.error(`⚠️ Erreur réseau pour ${filename} :`, error);
-    });
-}
-function sendBatches(tasks, batchSize, delayBetweenImages = 1000, delayBetweenBatches = 5000) {
-    let index = 0;
+    .catch(error => console.error("Erreur lors de l'envoi du matricule:", error));
 
-    async function sendNextBatch() {
-        if (index >= tasks.length) {
-            console.log('✅ Tous les envois sont terminés !');
-            return;
-        }
+ 
+    clearFields();
 
-        let batch = tasks.slice(index, index + batchSize);
-        index += batchSize;
-
-        for (let i = 0; i < batch.length; i++) {
-            await batch[i]();
-            await new Promise(resolve => setTimeout(resolve, delayBetweenImages));
-        }
-
-        console.log(`📦 Batch envoyé (${index}/${tasks.length})`);
-
-        setTimeout(sendNextBatch, delayBetweenBatches);
-    }
-
-    sendNextBatch();
-}
-
-
-    document.querySelector('.close-btn').addEventListener('click', function () {
-        document.getElementById('missing-names-modal').style.display = 'none';
-    });
-
-    function fetchData() {
-        fetch('https://script.google.com/macros/s/AKfycbw_pOBzwUWz2xBpZna2xHj8u869tADNLflrMlEpfmANumAq0XCo8IS35n40AnsGTakw/exec')
-            .then(response => response.json())
-            .then(data => displayData(data))
-            .catch(error => console.error('Error fetching data:', error));
-    }
-
-    window.fetchData = fetchData;
-    fetchData();
+    confirmModal.style.display = "none"; 
 });
 
-
-function fetchCommentFromGoogleSheets(employeeId, td) {
-    var url = 'https://script.google.com/macros/s/AKfycbxSP9sLqt741vpVa4oasL-0vHWU_iY6bP8z6YAkwY109SghnXZq4S0KgoM8fXMBe8tilA/exec?employeeId=' + employeeId;
-
-    fetch(url)
-        .then(response => response.json())  
-        .then(data => {
-            if (data && data.comment) {
-                
-                let existingNote = td.querySelector('.employee-note');
-
-                if (existingNote) {
-                    
-                    existingNote.remove();
-                } else {
-                    
-                    let note = document.createElement('div');
-                    note.classList.add('employee-note');  
-                    note.textContent =data.comment;
-
-                    
-                    note.style.fontStyle = 'italic';
-                    note.style.fontSize = '14px';
-                    note.style.color = 'rgb(255 255 255)';
-                    note.style.backgroundColor = 'rgb(0 0 0)'; 
-                    note.style.padding = '8px';
-                    note.style.borderRadius = '5px';
-                    note.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.1)';
-                    note.style.marginTop = '8px';
-                    note.style.border = '2px solid rgb(195 176 176)';
-                    note.style.transition = 'all 0.3s ease';
-                    note.style.maxWidth = '300px'; 
-                    note.style.wordWrap = 'break-word'; 
-                    note.addEventListener('mouseenter', function() {
-                        note.style.transform = 'scale(1.05)';
-                        note.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
-                    });
-
-                    note.addEventListener('mouseleave', function() {
-                        note.style.transform = 'scale(1)';
-                        note.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.1)';
-                    });
-
-                    
-                    td.appendChild(note);
-                }
-            } else {
-                alert('Aucun');
-            }
-        })
-        .catch(error => {
-            console.error('erreur. ', error);
-            alert('errour');
-        });
-}
-
-
-
-
-
-
-
-
-
-function fetchData1() {
-    fetch('https://script.googleusercontent.com/macros/echo?user_content_key=UD8heN6nFEyDz2PmHw3KaNYzvICjLrXBioaszkrmooiJx76NviHQ1IN3Vo3EY6LIuziYtlsukBfKz8e-xgTlEGtvXiXqAboZm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnM3Kri0XU2oA2Erb822H2YC_cn4PAgp4fTVvyhe9Kb_t1HNO98jGF18scWCFF4--xTcVoiZTVhwsrCA5O_Vi88x6QINgmi3zTA&lib=MY2tE_tyfTs-TzsLCAe0qlZwla2VcZTf1') // Replace with your Apps Script URL
-        .then(response => response.json()) 
-        .then(data1 => displayData1(data1)) 
-        .catch(error => console.error('Error:', error));
-}
-
-function formatDate(dateString) {
-    const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); 
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
-}
-
-function displayData1(data) {
-    const tableBody = document.getElementById('table-body2');
-    const totaltacheElement = document.getElementById('totaltache');
-    tableBody.innerHTML = ''; 
-    let uniquetache = new Set();
-    
-    const filteredData = data
-
-    filteredData.slice(1).forEach(row => {
-        if (row.some(cell => cell && typeof cell === 'string' && cell.trim() !== "")) {
-            let tr = document.createElement('tr');
-            row.forEach((cell, index) => {
-                let td = document.createElement('td');
-
-                if (index === 2 && cell) {
-                    td.textContent = formatDate(cell); 
-                } else {
-                    td.textContent = cell || '-'; 
-                }
-                
-                tr.appendChild(td);
-            });
-            tableBody.appendChild(tr);
-
-            if (row[3] && row[3].trim() !== "") {
-                uniquetache.add(row[3]);
-            }
-        }
-    });
-
-    totaltacheElement.textContent = uniquetache.size;
-
-    document.getElementById('download-btn').addEventListener('click', function() {
-        downloadTableAsXLSX(filteredData);
-    });
-}
-
-  
-
-function downloadTableAsXLSX(data) {
-    
-    const headers = ['EQUIPE', 'FINCA', 'DATE', 'TAREA', 'EFFECTIF'];
-
-   
-    const filteredData = data.slice(0).map(row => row.slice(0, 5)); 
-    const dataWithHeaders = [headers, ...filteredData];
-    const ws = XLSX.utils.aoa_to_sheet(dataWithHeaders);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-    XLSX.writeFile(wb, "EFFECTIF.xlsx");
-}
-
-function downloadTableAsXLSX1(data, fileName = "POINTAGE.xlsx") {
-    if (!data || data.length < 2) {
-        console.error("No valid data to export.");
-        return;
-    }
-
-    try {
-        const headers = ['ID', 'NOME', 'EQUIPE', 'RHH', 'DATE', 'FINCA'];
-        const filteredData = data.slice(0).map(row => row.slice(0, 6));
-        const dataWithHeaders = [headers, ...filteredData];
-
-        const ws = XLSX.utils.aoa_to_sheet(dataWithHeaders);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-
-        XLSX.writeFile(wb, fileName);
-    } catch (error) {
-        console.error("Error generating XLSX file:", error);
-    }
-}
-
-let groupCounts = {};
-let totalWorkers = 0;
-let groupCountsj = {};
-let totalWorkersj = 0;
-
-
-fetch("https://script.google.com/macros/s/AKfycbwk4unhrG7fwjgrec_O9PEit4kcC9kFsX9WhpL5L54HkOMZzPory7zDoR3_qZ-dNoilQw/exec")
-    .then(response => response.json())
-    .then(data => {
-        let filteredData = data.filter(row => row[11] === "CAMPO"); 
-        totalWorkers = filteredData.length;
-
-        filteredData.forEach(row => {
-            let group = row[7]; 
-            if (group) {
-                groupCounts[group] = (groupCounts[group] || 0) + 1;
-            }
-        });
-
-      
-        return fetch("https://script.google.com/macros/s/AKfycbwqL3JfKP4vFDp1Otp6drwO549d_8KDu5jXEB5jR_4IZjF96LI8jl3OggtMJp7yPBFcZg/exec");
-    })
-    .then(response => response.json())
-    .then(data => {
-        totalWorkersj = data.filter(row => row[8]).length;
-
-        data.forEach(row => {
-            let group1 = row[8]; 
-            if (group1) {
-                groupCountsj[group1] = (groupCountsj[group1] || 0) + 1;
-            }
-        });
-
-      
-        
-    })
-    .catch(error => console.error("Erreur", error));
-
-function showStatistics() {
-    let message = `📊 Statistiques des contrats :\n\n`;
-    message += `👥 Total travailleurs (CAMPO) : ${totalWorkers} prs \n`;
-    message += `👥 Total travailleurs aujourd'hui (CAMPO) : ${totalWorkersj} prs \n\n`;
-
-    let allGroups = new Set([...Object.keys(groupCounts), ...Object.keys(groupCountsj)]); 
-
-    allGroups.forEach(group => {
-        let count1 = groupCounts[group] || 0;
-        let count2 = groupCountsj[group] || 0;
-
-        let percentage1 = totalWorkers ? ((count1 / totalWorkers) * 100).toFixed(0) : "0";
-        let percentage2 = totalWorkersj ? ((count2 / totalWorkersj) * 100).toFixed(0) : "0";
-
-        message += `🟢 ${group}: ${count1} prs (${percentage1}%) | aujourd'hui 2: ${count2} prs (${percentage2}%)\n`;
-    });
-
-    alert(message);
-}
-
-let randomGroupCount = {}; 
-let randomTotalWorkers = 0;  
-let emptyCount = 0; 
-
-fetch("https://script.google.com/macros/s/AKfycbwk4unhrG7fwjgrec_O9PEit4kcC9kFsX9WhpL5L54HkOMZzPory7zDoR3_qZ-dNoilQw/exec")
-    .then(response => response.json())
-    .then(data => {
-        if (!data || data.length === 0) {
-            alert("Aucune donnée disponible.");
-            return;
-        }
-
-       
-        randomTotalWorkers = data.length;  
-
-
-        data.forEach(row => {
-            let randomGroup1 = row[15]; 
-            if (randomGroup1) {
-                randomGroupCount[randomGroup1] = (randomGroupCount[randomGroup1] || 0) + 1;
-            } else {
-                emptyCount++; 
-            }
-        });
-
-        
-        
-    })
-    .catch(error => console.error("Erreur lors de la récupération des données :", error));
-
-function showStatisticsjJ() {
-    let message1 = `📊 Statistiques trannsport :\n\n`;
-    message1 += `👥 Total actuel de travailleurs : ${randomTotalWorkers} prs\n\n`;
-
-   
-    let sortedGroups1 = Object.entries(randomGroupCount).sort((a, b) => b[1] - a[1]);
-
-  
-    sortedGroups1.forEach(([randomGroup1, count1]) => {
-        let percentage1 = ((count1 / randomTotalWorkers) * 100).toFixed(2);
-        message1 += `🟢 ${randomGroup1}: ${count1} prs (${percentage1}%)\n`;
-    });
-
-    if (emptyCount > 0) {
-        let percentageEmpty = ((emptyCount / randomTotalWorkers) * 100).toFixed(2);
-        message1 += `🔴 Autre : ${emptyCount} prs (${percentageEmpty}%)\n`;
-    }
-
-    alert(message1);
-}
-
-
-window.addEventListener("load", () => {
-    fetchData(); 
-    fetchData1(); 
+cancelSend.addEventListener("click", () => {
+    confirmModal.style.display = "none";
+    clearFields(); 
 });
 
+window.onclick = function(event) {
+    if (event.target == confirmModal) {
+        confirmModal.style.display = "none"; 
+        clearFields(); 
+    }
+};
 
-    </script>
+
+function clearFields() {
+    messageInput.value = '';  
+    groupSelect.selectedIndex = 0;  
+    fincaSelect.selectedIndex = 0;  
+}
+
+</script>
+
 </body>
 </html>
